@@ -4,157 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SDCAPortal - Student Portal</title>
-
+    <link rel="stylesheet" href="scholarship.css" />
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-  <style>
-    body {
-      background-color: #f5f5f5;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding-top: 70px; /* space for fixed navbar */
-      margin: 0;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 55px; /* height of navbar */
-      left: 0;
-      width: 250px;
-      height: 120%;
-      background-color: #222;
-      color: white;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .main-content {
-      margin-left: 250px;
-      padding: 30px;
-    }
-
-    .profile {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .profile .avatar {
-      width: 80px;
-      height: 80px;
-      background-color: #6c757d;
-      border-radius: 50%;
-      margin: 0 auto 10px;
-    }
-
-    .profile h2 {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-
-    .student-id-badge {
-      background-color: #dc3545;
-      font-size: 0.8rem;
-      padding: 5px 10px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-top: 5px;
-    }
-    .side-menu a {
-      display: block;
-      color: #f8f9fa;
-      text-decoration: none;
-      padding: 10px 0;
-      font-weight: 500;
-    }
-
-    .side-menu a:hover {
-      color: #fd0d0d;
-      padding-left: 5px;
-      transition: all 0.3s ease;
-    }
-
-    .card-announcement {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .footer {
-      background-color: #222;
-      color: #aaa;
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      margin-top: auto;
-    }
-
-    iframe {
-      width: 100%;
-      height: 300px;
-      border: none;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
-
-    .collapsible-content {
-      display: none;
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .collapsible-content.show {
-      display: block;
-    }
-
-    .view-btn {
-      text-decoration: none;
-      color: #0d6efd;
-      font-weight: bold;
-      float: right;
-    }
-
-    .item {
-      background-color: #ffffff;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    .item .info {
-      font-size: 1rem;
-    }
-
-    .apply-btn {
-      background-color: #0d6efd;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-        top: 0;
-        height: auto;
-      }
-
-      .main-content {
-        margin-left: 0;
-        padding: 100px 20px 30px;
-      }
-    }
-  </style>
 </head>
-
 <body class="d-flex flex-column min-vh-100">
 
 <!-- Navbar -->
@@ -197,14 +51,14 @@
     <div class="student-id-badge">Student ID: 202300995</div>
   </div>
   <nav class="side-menu">
-    <a href="profile.html" class="active">Profile</a>
-    <a href="grades.html" class="active">Grades</a>
-    <a href="balance.html" class="active">Balance</a>
-    <a href="e-permit.html" class="active">E - Permit</a>
-    <a href="schedule.html" class="active">Schedule</a>
-    <a href="awards.html" class="active">Awards</a>
-    <a href="clearance.html" class="active">Clearance</a>
-    <a href="scholarship.html" class="active">Scholarship</a>
+    <a href="profile.html" class="#">Profile</a>
+    <a href="grades.html" class="#">Grades</a>
+    <a href="balance.html" class="#">Balance</a>
+    <a href="e-permit.html" class="#">E - Permit</a>
+    <a href="schedule.html" class="#">Schedule</a>
+    <a href="awards.html" class="#">Awards</a>
+    <a href="clearance.html" class="#">Clearance</a>
+    <a href="scholarship.html" class="#">Scholarship</a>
   </nav>
 </aside>
 
@@ -214,48 +68,235 @@
 
   <section>
     <h2>Available Scholarships</h2>
-    <ul class="scholarship-list list-unstyled">
-      <li>
-        <div class="item">
-          <div class="info">
-            <strong>Gregdom Scholarship</strong><br />
-            Entrance Scholarship. Board and Non-board Program.
-          </div>
-          <a href="#" class="view-btn">View</a>
-          <div class="collapsible-content">
-            <h4>Academic Year</h4>
-            <p>2024–2025</p>
-            <h4>Document Requirements</h4>
-            <ul>
-              <li>Scholarship application form</li>
-              <li>Letter addressed to: Dr. Gregorio A. Andamann, Jr., MHA</li>
-              <li>Photocopy of Form 9</li>
-              <li>Certification of Ranking</li>
-              <li>Photocopy certificate of good moral character</li>
-              <li>Latest passport size picture</li>
-            </ul>
-            <a href="personal_inf.html">
-              <button class="apply-btn">Apply</button>
-            </a>
-            
-          </div>
+   <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Gregdom Scholarship</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
         </div>
-      </li>
+      <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong> Gregdom Scholarship</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Letter addressed to Dr. Gregorio A. Andaman, Jr., MHA</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+</ul>
+  
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Faculty/Staff Educational Benefits</strong><br>
+          <small>Legitimate Spouse and maximum of two children/one Dependent/Niece/Nephew</small>
+        </div>
+        <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong> Faculty/Staff Educational Benefits</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
 
-      <!-- More scholarships -->
-      <li>
-        <div class="item">
-          <div class="info"><strong>Faculty/Staff Educational Benefits</strong><br />Legitimate Spouse and max of two children/son Dependency/Niece/Nephew</div>
-          <a href="#" class="view-btn">View</a>
+</ul>
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Campus Leaders/Journalists Benefits</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
         </div>
-      </li>
-      <li><div class="item"><div class="info"><strong>Campus Leaders/Journalists Benefits</strong></div><a href="#" class="view-btn">View</a></div></li>
-      <li><div class="item"><div class="info"><strong>Pandemic Assistance Discounts</strong></div><a href="#" class="view-btn">View</a></div></li>
-      <li><div class="item"><div class="info"><strong>Academic Honors</strong></div><a href="#" class="view-btn">View</a></div></li>
-      <li><div class="item"><div class="info"><strong>Grants-In-Aide for Families</strong></div><a href="#" class="view-btn">View</a></div></li>
-      <li><div class="item"><div class="info"><strong>Student Athletes’ Benefits</strong></div><a href="#" class="view-btn">View</a></div></li>
-      <li><div class="item"><div class="info"><strong>Guro Mo, Sagot Ko</strong></div><a href="#" class="view-btn">View</a></div></li>
-    </ul>
+      <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong>Campus Leaders/Journalists Benefits</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+
+
+</ul>
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Pandemic Assistance Discounts</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
+        </div>
+      <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong>Pandemic Assistance Discounts</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+
+
+</ul>
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Academic Honors</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
+        </div>
+        <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong> Academic Honors</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+
+
+</ul>
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Grants-In-Aide for Families</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
+        </div>
+       <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong>Grants-In-Aide for Families</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+
+
+</ul>
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Student Athletes’ Benefits</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
+        </div>
+       <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong> Student Athletes’ Benefits</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+
+</ul>
+ <ul class="scholarship-list list-unstyled">
+  <li class="mb-3">
+    <div class="scholarship-card p-3 rounded shadow-sm bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Guro Mo, Sagot Ko</strong><br>
+          <small>Entrance Scholarship. Board and Non-board Program.</small>
+        </div>
+      <button class="view-toggle">View</button>
+      </div>
+      <div class="scholarship-details mt-3" style="display: none;">
+        <p><strong>Type of Scholarship:</strong>Guro Mo, Sagot Ko</p>
+        <p><strong>Description:</strong> Entrance Scholarship. Board and Non-board Program.</p>
+        <p><strong>Academic Year:</strong> 2024-2025</p>
+        <p><strong>Document Requirements:</strong></p>
+        <ul>
+          <li>Scholarship application form</li>
+          <li>Photocopy of Form 9</li>
+          <li>Certification of Ranking</li>
+          <li>Photocopy certificate of good moral character</li>
+          <li>Latest passport size picture</li>
+        </ul>
+        <a href="personal_inf.html" class="btn btn-danger mt-2">Apply</a>
+      </div>
+    </div>
+  </li>
+</ul>
+
   </section>
 </main>
 
@@ -268,18 +309,27 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // Toggle collapsible content
-  document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      const content = this.parentElement.querySelector('.collapsible-content');
-      if (content) {
-        content.classList.toggle('show');
-        this.textContent = content.classList.contains('show') ? 'Hide' : 'View';
-      }
+  const viewButtons = document.querySelectorAll('.view-toggle');
+  viewButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const thisCard = button.closest('.scholarship-card');
+      const thisDetails = thisCard.querySelector('.scholarship-details');
+
+      // Close all other open details
+      document.querySelectorAll('.scholarship-details').forEach(detail => {
+        if (detail !== thisDetails) {
+          detail.style.display = 'none';
+        }
+      });
+
+      // Toggle this one
+      thisDetails.style.display = thisDetails.style.display === 'none' ? 'block' : 'none';
     });
   });
 </script>
+
+
+
 
 </body>
 </html>
