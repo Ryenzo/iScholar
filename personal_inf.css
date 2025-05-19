@@ -1,0 +1,435 @@
+/* Base Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+  }
+  
+
+.form-navigation {
+    display: fl ex;
+    justify-content: center;
+    gap: 20px;
+}
+  /* View Controls */
+  .view-controls {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .control-button {
+    padding: 8px 16px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .control-button.active {
+    background-color: maroon;
+    color: white;
+    border-color: maroon;
+  }
+  
+  .all-button {
+    border-radius: 4px 0 0 4px;
+  }
+  
+  #show-steps-btn {
+    border-radius: 0 4px 4px 0;
+  }
+  
+  /* Stepper */
+  .stepper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .step {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-bottom: 4px solid #ccc;
+    color: #777;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .step-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+  
+  .step.active {
+    font-weight: bold;
+    border-bottom-color: maroon;
+    color: maroon;
+  }
+  
+  /* Section Dividers */
+  .section-divider {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 10px 0 20px 0;
+  }
+  
+  /* Headings */
+  h2 {
+    margin-bottom: 10px;
+    color: maroon;
+    font-weight: 600;
+  }
+  
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  
+  /* Form Layout */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: #fff;
+    z-index: 2;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar + .container {
+    margin-left: 270px;
+}
+  .full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .right-align {
+    text-align: right;
+  }
+ .two-column {
+    display: flex;
+    flex-wrap: wrap;   
+    gap: 40px;
+  }
+
+
+/* Column contents */
+.column-father,
+.column-mother {
+  flex: 1;
+  min-width: 100px;
+}
+  /* Form Inputs */
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+  
+  input:focus,
+  select:focus {
+    border-color: maroon;
+    outline: none;
+    box-shadow: 0 0 3px rgba(128,0,0,0.2);
+  }
+  
+  label {
+    font-weight: 600;
+    display: block;
+  }
+  
+  .optional {
+    font-weight: normal;
+    color: #888;
+    font-size: 0.9em;
+  }
+  
+  .required {
+    color: red;
+  }
+  
+  /* Button Styles - CONSISTENT ACROSS ALL STEPS */
+  .next-button,
+  .prev-button,
+  .submit-button {
+    padding: 10px 20px;
+    background-color: maroon;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .next-button:hover,
+  .prev-button:hover,
+  .submit-button:hover {
+    background-color: #990000;
+  }
+  
+  /* Navigation Controls */
+  /* Make sure this CSS matches your form-navigation class */
+  .form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 100%;
+  }
+  
+  
+  /* Add margin to the right button to push it to the right */
+  .form-navigation .next-button,
+  .form-navigation .submit-button {
+    margin-left: auto;
+  }
+  
+  /* Hidden Class */
+  .hidden {
+    display: none;
+  }
+  
+  /* File Upload Section */
+  .upload-form label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+  
+  .upload-form input[type="file"] {
+    margin-bottom: 20px;
+    padding: 8px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  /* Appointment Section */
+  .appointment-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 15px;
+  }
+  
+  .appointment-form label {
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .appointment-form select,
+  .appointment-form input[type="number"] {
+    width: 200px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+  
+  /* Summary Box */
+  .summary-box {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .summary-box h3 {
+    color: maroon;
+    margin-top: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+  }
+  
+  .summary-box p {
+    margin-bottom: 10px;
+    padding-left: 10px;
+  }
+  
+  /* Radio Group */
+  .radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .radio-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+  }
+  
+  .radio-group input[type="radio"] {
+    margin-right: 5px;
+  }
+  
+  /* Form Inline */
+  .form-inline {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .form-inline label {
+    font-weight: normal;
+  }
+  
+  /* Success Screen */
+  .success-container {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .success-title {
+    color: maroon;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .success-checkmark {
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+  }
+  
+  .checkmark-path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 2s ease-in-out forwards;
+  }
+  
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  .success-message {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 20px;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 600px) {
+    .stepper {
+      flex-direction: column;
+    }
+    
+    .step {
+      margin-bottom: 5px;
+    }
+    
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .full-width {
+      grid-column: 1;
+    }
+    
+    .form-navigation {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .form-navigation button {
+      width: 100%;
+    }
+    
+    .form-navigation .next-button,
+    .form-navigation .submit-button {
+      margin-left: 0;
+    }
+  } 
+  .step-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      gap: 10px;
+  .step {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      min-width: 120px;
+      flex: 1;
+  }
+    transition: transform 0.2s ease;
+  }
+
+  .step:hover {
+    transform: scale(1.05);
+  }
+
+  .step.active {
+    font-weight: bold;
+    color: #0d6efd;
+  }
+
+  .step-icon img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  .step div {
+    margin-top: 5px;
+    font-size: 14px;
+  }
