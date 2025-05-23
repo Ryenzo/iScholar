@@ -27,7 +27,7 @@
       overflow-y: auto;
     }
 
-    .main-content {
+    .dashboard {
       margin-left: 250px;
       padding: 30px;
     }
@@ -134,6 +134,94 @@
       margin-top: 30px;
     }
 
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      background-color: #6c757d;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .activity-table th,
+    .activity-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .status-active {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .status-pending {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .btn-edit,
+    .btn-delete {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .btn-edit {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         position: relative;
@@ -142,13 +230,14 @@
         height: auto;
       }
 
-      .main-content {
+      .dashboard {
         margin-left: 0;
       }
     }
   </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
@@ -202,24 +291,112 @@
       </div>
     </div>
 
-    <a href="#">Set Schedule</a>
+    <a href="set_schedule.html">Set Schedule</a>
   </nav>
 </aside>
 
 <!-- Main Content -->
-<main class="main-content">
-  <h1 class="fw-bold">What's New</h1>
+<main class="dashboard">
+  <div class="container my-5">
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">List of Scholars</h2>
+    <div class="table-responsive shadow rounded" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
 
-  <section class="card-announcement">
-    <h2 class="h4 fw-bold"><i class="bi bi-megaphone-fill"></i> Announcements</h2>
-    <p>No Announcements</p>
-  </section>
+        $conn = new mysqli($host, $user, $password, $database);
 
-  <section>
-    <h2 class="h4 fw-bold">Follow Us</h2>
-    <iframe src="https://www.facebook.com/plugins/page.php?href=https://www.facebook.com/SDCAofficial"></iframe>
-  </section>
+        if ($conn->connect_error) {
+          die("Connection failed: " . $conn->connect_error);
+        }
+
+        $sql = "SELECT * FROM students";
+        $result = $conn->query($sql);
+
+        if (!$result) {
+          die("Query failed: " . $conn->error);
+        }
+
+        while ($row = $result->fetch_assoc()) {
+          echo "<tr>";
+          echo "<td class='text-center fw-semibold'>" . htmlspecialchars($row['id']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+          echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+          echo "<td class='text-center'>
+              <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                <i class='bi bi-check-circle'></i> Accept
+              </a>
+              <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                <i class='bi bi-x-circle'></i> Decline
+              </a>
+            </td>";
+          echo "</tr>";
+        }
+        ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </main>
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+  .table thead th {
+    vertical-align: middle;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: background 0.2s;
+  }
+  .btn-success.btn-sm, .btn-danger.btn-sm {
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-success.btn-sm:hover {
+    background: #218838;
+    color: #fff;
+  }
+  .btn-danger.btn-sm:hover {
+    background: #c82333;
+    color: #fff;
+  }
+  @media (max-width: 768px) {
+    .table-responsive {
+      font-size: 0.95rem;
+    }
+    .dashboard {
+      padding: 10px;
+    }
+    .container.my-5 {
+      margin-top: 1.5rem !important;
+      margin-bottom: 1.5rem !important;
+    }
+  }
+</style>
 
 <!-- Footer -->
 <footer class="footer mt-auto">

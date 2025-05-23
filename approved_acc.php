@@ -189,7 +189,7 @@
     <div class="student-id-badge">Student ID: 202300995</div>
   </div>
   <nav class="side-menu">
-    <a href="dashboard.php" class="active">System Admin Dashboard</a>
+    <a href="dashboard.php" class="active">System Admin Dashboard   </a>
 
     <div class="dropdown-section student-registration">
       <div class="dropdown-header" onclick="toggleDropdown()">
@@ -202,23 +202,69 @@
       </div>
     </div>
 
-    <a href="#">Set Schedule</a>
+    <a href="set_schedule.html">Set Schedule</a>
   </nav>
 </aside>
 
+
 <!-- Main Content -->
 <main class="main-content">
-  <h1 class="fw-bold">What's New</h1>
+  <div class="container my-5">
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Accepted Scholars</h2>
+    <div class="table-responsive shadow rounded admin-table-bg">
+      <table class="table table-hover align-middle mb-0 admin-activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Accepted At</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
 
-  <section class="card-announcement">
-    <h2 class="h4 fw-bold"><i class="bi bi-megaphone-fill"></i> Announcements</h2>
-    <p>No Announcements</p>
-  </section>
+        $conn = new mysqli($host, $user, $password, $database);
 
-  <section>
-    <h2 class="h4 fw-bold">Follow Us</h2>
-    <iframe src="https://www.facebook.com/plugins/page.php?href=https://www.facebook.com/SDCAofficial"></iframe>
-  </section>
+        if ($conn->connect_error) {
+          die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Only show accepted scholars
+        // Update the query to use an existing column, e.g., 'status' or remove the condition if not available
+        $sql = "SELECT * FROM students ORDER BY created_at DESC";
+        $result = $conn->query($sql);
+
+        if (!$result) {
+          die("Query failed: " . $conn->error);
+        }
+
+        if ($result->num_rows === 0) {
+          echo "<tr><td colspan='6' class='text-center text-muted'>No accepted scholars yet.</td></tr>";
+        } else {
+          while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>" . htmlspecialchars($row['id']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "</tr>";
+          }
+        }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </main>
 
 <!-- Footer -->

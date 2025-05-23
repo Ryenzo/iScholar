@@ -70,7 +70,7 @@ button {
 }
 
 button:hover {
-    background: #6884d3;
+    background: #d36868;
 }
 
 p {
@@ -80,7 +80,7 @@ p {
 }
 
 p a {
-    color: #7494ec;
+    color: #ec7474;
     text-decoration: none;
 }
 

@@ -166,7 +166,20 @@
 </aside>
 
 <!-- Main Content -->
-    
+    <main class="main-content">
+  <h1 class="fw-bold">SDCAPortal</h1>
+
+  <section class="card-announcement">
+    <h2 class="h4 fw-bold"><i class="bi bi-megaphone-fill"></i> Announcements</h2>
+    <p>No Announcements</p>
+  </section>
+
+  <section>
+    <h2 class="h4 fw-bold">Follow Us</h2>
+    <iframe src="https://www.facebook.com/plugins/page.php?href=https://www.facebook.com/SDCAofficial"></iframe>
+  </section>
+</main>
+
 
   <section>
     <h2 class="h4 fw-bold">Follow Us</h2>
