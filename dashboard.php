@@ -315,12 +315,41 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-// Total users
-$totalUsers = $conn->query("SELECT COUNT(*) FROM students")->fetch_row()[0];
+// Total users (sum of users in all relevant tables)
+$totalGregdom = $conn->query("SELECT COUNT(*) FROM gregdom")->fetch_row()[0];
+$totalFaculty = $conn->query("SELECT COUNT(*) FROM faculty")->fetch_row()[0];
+$totalCampusLeaders = $conn->query("SELECT COUNT(*) FROM campus_leaders")->fetch_row()[0];
+$totalAcademicHonors = $conn->query("SELECT COUNT(*) FROM academic_honors")->fetch_row()[0];
+$totalPandemicAssistance = $conn->query("SELECT COUNT(*) FROM pandemic_assistance")->fetch_row()[0];
+$totalGrant = $conn->query("SELECT COUNT(*) FROM grants")->fetch_row()[0];
+$totalStudentAthletes = $conn->query("SELECT COUNT(*) FROM student_athletes")->fetch_row()[0];
+$totalGuroMo = $conn->query("SELECT COUNT(*) FROM guro_mo")->fetch_row()[0];
 
-// Pending requests (example: status='pending')
-// Replace 'status' with the correct column name or remove the WHERE clause if not applicable
-$pendingRequests = $conn->query("SELECT COUNT(*) FROM students")->fetch_row()[0];
+$totalUsers = $totalGregdom + $totalFaculty + $totalCampusLeaders + $totalAcademicHonors + $totalPandemicAssistance + $totalGrant + $totalStudentAthletes + $totalGuroMo;
+
+// Pending requests (real-time: count only rows with status 'pending')
+// Only run the query if the table has a 'status' column, otherwise set to 0
+function countPending($conn, $table) {
+  $result = $conn->query("SHOW COLUMNS FROM `$table` LIKE 'status'");
+  if ($result && $result->num_rows > 0) {
+    $row = $conn->query("SELECT COUNT(*) FROM `$table` WHERE status = 'pending'");
+    if ($row) {
+      return $row->fetch_row()[0];
+    }
+  }
+  return 0;
+}
+
+$pendingGregdom = countPending($conn, "gregdom");
+$pendingFaculty = countPending($conn, "faculty");
+$pendingCampusLeaders = countPending($conn, "campus_leaders");
+$pendingAcademicHonors = countPending($conn, "academic_honors");
+$pendingPandemicAssistance = countPending($conn, "pandemic_assistance");
+$pendingGrant = countPending($conn, "grants");
+$pendingStudentAthletes = countPending($conn, "student_athletes");
+$pendingGuroMo = countPending($conn, "guro_mo");
+
+$pendingRequests = $pendingGregdom + $pendingFaculty + $pendingCampusLeaders + $pendingAcademicHonors + $pendingPandemicAssistance + $pendingGrant + $pendingStudentAthletes + $pendingGuroMo;
 
 // Active sessions and system health are placeholders
 $activeSessions = 0; // You can implement your own logic

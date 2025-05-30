@@ -3,10 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <title>SDCAPortal - Student Portal</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 
   <style>
     body {
@@ -298,8 +306,10 @@
 <!-- Main Content -->
 <main class="dashboard">
   <div class="container my-5">
-    <h2 class="mb-4 text-center fw-bold" style="color:#222;">List of Scholars</h2>
-    <div class="table-responsive shadow rounded" style="background: #fff;">
+
+    <!-- 1. Gregdom Scholarship -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Gregdom Scholarship</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
       <table class="table table-hover align-middle mb-0 activity-table">
         <thead class="table-dark">
           <tr>
@@ -308,54 +318,798 @@
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
             <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          // Gregdom Scholarship
+          $host = "localhost";
+          $user = "root";
+          $password = "";
+          $database = "students";
+          $conn = new mysqli($host, $user, $password, $database);
+
+          if ($conn->connect_error) {
+              die("Connection failed: " . $conn->connect_error);
+          }
+
+          $sql = "SELECT * FROM gregdom ORDER BY created_at ASC";
+          $result = $conn->query($sql);
+
+          if ($result) {
+            while ($row = $result->fetch_assoc()) {
+              $id = htmlspecialchars($row['id']);
+              $name = htmlspecialchars($row['name']);
+              echo "<tr>";
+              echo "<td class='text-center fw-semibold'>{$id}</td>";
+              echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+              echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+              echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+              echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+
+              // Attachments with modal
+              echo "<td>
+                      <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalGregdom{$id}'>
+                        View Attachments
+                      </button>
+                      <div class='modal fade' id='attachmentsModalGregdom{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelGregdom{$id}' aria-hidden='true'>
+                        <div class='modal-dialog modal-dialog-centered modal-lg'>
+                          <div class='modal-content'>
+                            <div class='modal-header'>
+                              <h5 class='modal-title' id='attachmentsModalLabelGregdom{$id}'>Attachments - {$name}</h5>
+                              <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                            </div>
+                            <div class='modal-body'>
+                              <ul class='list-group list-group-flush'>";
+              $attachments = [
+                'application_form' => 'Application Form',
+                'letter' => 'Letter',
+                'form9' => 'Form 9',
+                'ranking_cert' => 'Ranking Certificate',
+                'good_moral' => 'Good Moral',
+                'passport_pic' => 'Passport Picture'
+              ];
+              $hasFiles = false;
+              foreach ($attachments as $field => $label) {
+                if (!empty($row[$field])) {
+                  $fileUrl = htmlspecialchars($row[$field]);
+                  echo "<li class='list-group-item'>
+                          <a href='{$fileUrl}' target='_blank'>
+                            <i class='bi bi-file-earmark-text'></i> {$label}
+                          </a>
+                        </li>";
+                  $hasFiles = true;
+                }
+              }
+              if (!$hasFiles) {
+                echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+              }
+              echo "           </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>";
+
+echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+echo "<td class='text-center' id='row-" . $row['id'] . "'>
+        <button class='btn btn-success btn-sm me-1 accept-btn' data-id='" . $row['id'] . "'>
+          <i class='bi bi-check-circle'></i> Accept
+        </button>
+        <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+          <i class='bi bi-x-circle'></i> Decline
+        </a>
+      </td>";
+echo "</tr>";
+
+              }
+              } else {
+              echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
+              }
+              $conn->close();
+          ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. Faculty/Staff Educational Benefits -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Faculty/Staff Educational Benefits</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
             <th scope="col">Created At</th>
             <th scope="col" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
         <?php
+        // Faculty/Staff Educational Benefits
         $host = "localhost";
         $user = "root";
         $password = "";
         $database = "students";
-
         $conn = new mysqli($host, $user, $password, $database);
-
-        if ($conn->connect_error) {
-          die("Connection failed: " . $conn->connect_error);
-        }
-
-        $sql = "SELECT * FROM students";
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM faculty ORDER BY created_at ASC";
         $result = $conn->query($sql);
-
-        if (!$result) {
-          die("Query failed: " . $conn->error);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalFaculty{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalFaculty{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelFaculty{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelFaculty{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'faculty_id' => 'Faculty ID',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
         }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
 
-        while ($row = $result->fetch_assoc()) {
-          echo "<tr>";
-          echo "<td class='text-center fw-semibold'>" . htmlspecialchars($row['id']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['address']) . "</td>";
-          echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
-          echo "<td class='text-center'>
-              <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
-                <i class='bi bi-check-circle'></i> Accept
-              </a>
-              <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
-                <i class='bi bi-x-circle'></i> Decline
-              </a>
-            </td>";
-          echo "</tr>";
+    <!-- 3. Campus Leaders/Journalists Benefits -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Campus Leaders/Journalists Benefits</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Campus Leaders/Journalists Benefits
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
+        $conn = new mysqli($host, $user, $password, $database);
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM campus_leaders ORDER BY created_at ASC";
+        $result = $conn->query($sql);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalLeaders{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalLeaders{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelLeaders{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelLeaders{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'leadership_cert' => 'Leadership Certificate',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
         }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. Pandemic Assistance Discounts -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Pandemic Assistance Discounts</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Pandemic Assistance Discounts
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
+        $conn = new mysqli($host, $user, $password, $database);
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM pandemic_assistance ORDER BY created_at DESC";
+        $result = $conn->query($sql);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalPandemic{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalPandemic{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelPandemic{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelPandemic{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'discount_cert' => 'Discount Certificate',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
+        }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. Academic Honors -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Academic Honors</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Academic Honors
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
+        $conn = new mysqli($host, $user, $password, $database);
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM academic_honors ORDER BY created_at DESC";
+        $result = $conn->query($sql);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalHonors{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalHonors{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelHonors{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelHonors{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'honor_cert' => 'Honor Certificate',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
+        }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6. Grants-In-Aide for Families -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Grants-In-Aide for Families</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Grants-In-Aide for Families
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
+        $conn = new mysqli($host, $user, $password, $database);
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM grants ORDER BY created_at DESC";
+        $result = $conn->query($sql);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalGrants{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalGrants{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelGrants{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelGrants{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'family_cert' => 'Family Certificate',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
+        }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 7. Student Athletes’ Benefits -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Student Athletes’ Benefits</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Student Athletes’ Benefits
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
+        $conn = new mysqli($host, $user, $password, $database);
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM student_athletes ORDER BY created_at DESC";
+        $result = $conn->query($sql);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalAthletes{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalAthletes{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelAthletes{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelAthletes{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'athlete_cert' => 'Athlete Certificate',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
+        }
+        $conn->close();
+        ?>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8. Guro Mo, Sagot Ko -->
+    <h2 class="mb-4 text-center fw-bold" style="color:#222;">Guro Mo, Sagot Ko</h2>
+    <div class="table-responsive shadow rounded mb-5" style="background: #fff;">
+      <table class="table table-hover align-middle mb-0 activity-table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="text-center">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Attachments</th>
+            <th scope="col">Created At</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Guro Mo, Sagot Ko
+        $host = "localhost";
+        $user = "root";
+        $password = "";
+        $database = "students";
+        $conn = new mysqli($host, $user, $password, $database);
+        if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
+        $sql = "SELECT * FROM guro_mo ORDER BY created_at ASC";
+        $result = $conn->query($sql);
+        if ($result) {
+          while ($row = $result->fetch_assoc()) {
+            $id = htmlspecialchars($row['id']);
+            $name = htmlspecialchars($row['name']);
+            echo "<tr>";
+            echo "<td class='text-center fw-semibold'>{$id}</td>";
+            echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            // Attachments with modal
+            echo "<td>
+                    <button class='btn btn-outline-primary btn-sm' data-bs-toggle='modal' data-bs-target='#attachmentsModalGuro{$id}'>
+                      View Attachments
+                    </button>
+                    <div class='modal fade' id='attachmentsModalGuro{$id}' tabindex='-1' aria-labelledby='attachmentsModalLabelGuro{$id}' aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-lg'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='attachmentsModalLabelGuro{$id}'>Attachments - {$name}</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <ul class='list-group list-group-flush'>";
+            $attachments = [
+              'application_form' => 'Application Form',
+              'letter' => 'Letter',
+              'guro_cert' => 'Guro Certificate',
+              'good_moral' => 'Good Moral',
+              'passport_pic' => 'Passport Picture'
+            ];
+            $hasFiles = false;
+            foreach ($attachments as $field => $label) {
+              if (!empty($row[$field])) {
+                $fileUrl = htmlspecialchars($row[$field]);
+                echo "<li class='list-group-item'>
+                        <a href='{$fileUrl}' target='_blank'>
+                          <i class='bi bi-file-earmark-text'></i> {$label}
+                        </a>
+                      </li>";
+                $hasFiles = true;
+              }
+            }
+            if (!$hasFiles) {
+              echo "<li class='list-group-item text-muted'>No attachments found.</li>";
+            }
+            echo "           </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>";
+            echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+            echo "<td class='text-center'>
+                    <a class='btn btn-success btn-sm me-1' href='/scholarship/approve_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-check-circle'></i> Accept
+                    </a>
+                    <a class='btn btn-danger btn-sm' href='/scholarship/decline_acc.php?id=" . urlencode($row['id']) . "'>
+                      <i class='bi bi-x-circle'></i> Decline
+                    </a>
+                  </td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='8' class='text-center text-danger'>No records found.</td></tr>";
+        }
+        $conn->close();
         ?>
         </tbody>
       </table>
     </div>
   </div>
 </main>
+
 <!-- Bootstrap Icons CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
@@ -405,6 +1159,31 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.accept-btn').click(function () {
+      const id = $(this).data('id');
+      const button = $(this);
+
+      $.ajax({
+        url: 'http://localhost/Scholarship/auth/approved_acc.php',
+        type: 'GET',
+        data: { id: id },
+        success: function (response) {
+          // Hide the accept button on success
+          button.fadeOut();
+          // Optional: Show a confirmation message or redirect
+          // You can also move the row to a different table if needed
+        },
+        error: function () {
+          alert('An error occurred. Please try again.');
+        }
+      });
+    });
+  });
+</script>
+
 
 <!-- Toggle Dropdown Script -->
 <script>

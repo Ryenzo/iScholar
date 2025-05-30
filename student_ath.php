@@ -3,55 +3,90 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "students";
+
 $conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
 
+$name = $email = $phone = $address = "";
+$errorMessage = $successMessage = "";
+$uploadDir = "uploads/";
 
-
-$name = "";
-$email = "";
-$phone = "";
-$address = "";
-
-$errorMessage= "";
-$successMessage = "";
-
-
-if  ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $address = $_POST["address"];
-
-    do {
-      if (empty($name) || empty($email) || empty($phone) || empty($address)) {
-        $errorMessage = "All fields are required.";
-        break;
-      }
-
-        $sql = "INSERT INTO students (name, email, phone, address) 
-        VALUES ('$name', '$email', '$phone', '$address')";
-        $result = $conn->query($sql);
-        if (!$result) {
-          $errorMessage = "Error: " . $conn->error;
-          break;
-        }
-
-
-      $name = "";
-      $email = "";
-      $phone = "";
-      $address = "";
-
-      $successMessage = "Application submitted successfully!";
-
-      header("location:scholarship.html");
-      exit;
-
-
-
-    } while (false);
+// File upload helper
+function uploadFile($inputName, $uploadDir) {
+  if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] == 0) {
+    $filename = basename($_FILES[$inputName]['name']);
+    $targetPath = $uploadDir . time() . "_" . uniqid() . "_" . $filename;
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0777, true);
+    }
+    if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetPath)) {
+      return $targetPath;
+    }
   }
+  return null;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"] ?? "";
+  $email = $_POST["email"] ?? "";
+  $phone = $_POST["phone"] ?? "";
+  $address = $_POST["address"] ?? "";
+
+  $applicationFormPath    = uploadFile('application_form', $uploadDir);
+  $letterToDrAndamanPath  = uploadFile('letter_to_dr_andaman', $uploadDir);
+  $form9Path              = uploadFile('form9', $uploadDir);
+  $recommendationISPSPath = uploadFile('recommendation_isps', $uploadDir);
+  $gradesCertPath         = uploadFile('grades_cert', $uploadDir);
+  $passportPicPath        = uploadFile('passport_pic', $uploadDir);
+
+  $status = "Pending";
+
+  do {
+    if (empty($name) || empty($email) || empty($phone) || empty($address)) {
+      $errorMessage = "All fields are required.";
+      break;
+    }
+
+    $sql = "INSERT INTO student_athletes
+      (name, email, phone, address, application_form, letter_to_dr_andaman, form9, recommendation_isps, grades_cert, passport_pic, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+      $errorMessage = "Prepare failed: " . $conn->error;
+      break;
+    }
+
+    $stmt->bind_param(
+      "sssssssssss",
+      $name,
+      $email,
+      $phone,
+      $address,
+      $applicationFormPath,
+      $letterToDrAndamanPath,
+      $form9Path,
+      $recommendationISPSPath,
+      $gradesCertPath,
+      $passportPicPath,
+      $status
+    );
+
+    if (!$stmt->execute()) {
+      $errorMessage = "Execute failed: " . $stmt->error;
+      break;
+    }
+
+    $successMessage = "Application submitted successfully!";
+    header("Location: scholarship.html");
+    exit;
+
+  } while (false);
+}
 ?>
+
 
 
 <!DOCTYPE html>

@@ -5,53 +5,93 @@ $password = "";
 $dbname = "students";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-
-
 $name = "";
 $email = "";
 $phone = "";
 $address = "";
 
-$errorMessage= "";
+$errorMessage = "";
 $successMessage = "";
 
+// Directory for uploads
+$uploadDir = "uploads/";
 
-if  ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $address = $_POST["address"];
-
-    do {
-      if (empty($name) || empty($email) || empty($phone) || empty($address)) {
-        $errorMessage = "All fields are required.";
-        break;
-      }
-
-        $sql = "INSERT INTO students (name, email, phone, address) 
-        VALUES ('$name', '$email', '$phone', '$address')";
-        $result = $conn->query($sql);
-        if (!$result) {
-          $errorMessage = "Error: " . $conn->error;
-          break;
-        }
-
-
-      $name = "";
-      $email = "";
-      $phone = "";
-      $address = "";
-
-      $successMessage = "Application submitted successfully!";
-
-      header("location:scholarship.html");
-      exit;
-
-
-
-    } while (false);
+// Helper function to upload file and return path or null
+function uploadFile($inputName, $uploadDir) {
+  if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] == 0) {
+    $filename = basename($_FILES[$inputName]['name']);
+    $targetPath = $uploadDir . time() . "_" . uniqid() . "_" . $filename;
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0777, true);
+    }
+    if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetPath)) {
+      return $targetPath;
+    }
   }
+  return null;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"] ?? "";
+  $email = $_POST["email"] ?? "";
+  $phone = $_POST["phone"] ?? "";
+  $address = $_POST["address"] ?? "";
+
+  // File uploads
+  $applicationFormPath = uploadFile('application_form', $uploadDir);
+  $letterPath = uploadFile('letter', $uploadDir);
+  $form9Path = uploadFile('form9', $uploadDir);
+  $passportPicPath = uploadFile('passport_pic', $uploadDir);
+  $birthCertPath = uploadFile('birth_certificate', $uploadDir);
+  $alumniIdPath = uploadFile('alumni_id', $uploadDir);
+  $employmentCertPath = uploadFile('employment_cert', $uploadDir);
+
+  $facultyStatus = "Pending";
+
+  do {
+    if (empty($name) || empty($email) || empty($phone) || empty($address)) {
+      $errorMessage = "All fields are required.";
+      break;
+    }
+
+    $sql = "INSERT INTO faculty 
+      (name, email, phone, address, application_form, letter, form9, passport_pic, birth_certificate, alumni_id, employment_cert, faculty_status) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+      $errorMessage = "Error: " . $conn->error;
+      break;
+    }
+
+    $stmt->bind_param(
+      "ssssssssssss",
+      $name,
+      $email,
+      $phone,
+      $address,
+      $applicationFormPath,
+      $letterPath,
+      $form9Path,
+      $passportPicPath,
+      $birthCertPath,
+      $alumniIdPath,
+      $employmentCertPath,
+      $facultyStatus
+    );
+
+    if (!$stmt->execute()) {
+      $errorMessage = "Error: " . $stmt->error;
+      break;
+    }
+
+    $name = $email = $phone = $address = "";
+    $successMessage = "Application submitted successfully!";
+    header("Location: scholarship.html");
+    exit;
+  } while (false);
+}
 ?>
+
 
 
 <!DOCTYPE html>
@@ -257,32 +297,35 @@ if  ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="col-md-6">
         <h5 class="fw-bold mb-3 text-danger">Upload Requirements</h5>
         <div class="mb-3">
-        <label class="form-label" for="application_form">Scholarship application form</label>
-        <input type="file" class="form-control" id="application_form" name="application_form" accept=".pdf" >
+          <label class="form-label" for="application_form">Scholarship application form <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="application_form" name="application_form" accept=".pdf" required>
         </div>
         <div class="mb-3">
-        <label class="form-label" for="letter">Letter addressed to: Dr. Gregorio A. Andaman, Jr., MHA</label>
-        <input type="file" class="form-control" id="letter" name="letter" accept=".pdf">
+          <label class="form-label" for="letter">Letter addressed to: Dr. Gregorio A. Andaman, Jr., MHA <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="letter" name="letter" accept=".pdf" required>
         </div>
         <div class="mb-3">
-        <label class="form-label" for="birth_cert">Photocopy of Applicant’s PSA/Birth certificate</label>
-        <input type="file" class="form-control" id="birth_cert" name="birth_cert" accept=".pdf,.jpg,.jpeg,.png">
+          <label class="form-label" for="birth_certificate">Photocopy of Applicant’s PSA/Birth certificate <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="birth_certificate" name="birth_certificate" accept=".pdf,.jpg,.jpeg,.png" required>
         </div>
         <div class="mb-3">
-        <label class="form-label" for="passport_pic">Latest passport size picture</label>
-        <input type="file" class="form-control" id="passport_pic" name="passport_pic" accept=".jpg,.jpeg,.png">
+          <label class="form-label" for="passport_pic">Latest passport size picture <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="passport_pic" name="passport_pic" accept=".jpg,.jpeg,.png" required>
         </div>
         <div class="mb-3">
-        <label class="form-label" for="faculty_status">Photocopy of Faculty’s status</label>
-        <input type="file" class="form-control" id="faculty_status" name="faculty_status" accept=".pdf,.jpg,.jpeg,.png">
+          <label class="form-label" for="alumni_id">Photocopy of Alumni ID <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="alumni_id" name="alumni_id" accept=".pdf,.jpg,.jpeg,.png" required>
         </div>
         <div class="mb-3">
-        <label class="form-label" for="form9">Photocopy of Form 9</label>
-        <input type="file" class="form-control" id="form9" name="form9" accept=".pdf,.jpg,.jpeg,.png">
+          <label class="form-label" for="employment_cert">Certificate of Employment <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="employment_cert" name="employment_cert" accept=".pdf,.jpg,.jpeg,.png" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="form9">Photocopy of Form 9 <span class="text-danger">*</span></label>
+          <input type="file" class="form-control" id="form9" name="form9" accept=".pdf,.jpg,.jpeg,.png" required>
         </div>
       </div>
-    </div>
-      
+        </div>
       <?php
       if (!empty($successMessage)) {
           echo "<div class='alert alert-success'>$successMessage</div>";

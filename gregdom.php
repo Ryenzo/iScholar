@@ -5,52 +5,93 @@ $password = "";
 $dbname = "students";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-
-
 $name = "";
 $email = "";
 $phone = "";
 $address = "";
 
-$errorMessage= "";
+$errorMessage = "";
 $successMessage = "";
 
+// Directory for uploads
+$uploadDir = "uploads/";
 
-if  ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $address = $_POST["address"];
-
-    do {
-      if (empty($name) || empty($email) || empty($phone) || empty($address)) {
-        $errorMessage = "All fields are required.";
-        break;
-      }
-
-        $sql = "INSERT INTO students (name, email, phone, address) 
-        VALUES ('$name', '$email', '$phone', '$address')";
-        $result = $conn->query($sql);
-        if (!$result) {
-          $errorMessage = "Error: " . $conn->error;
-          break;
-        }
-
-
-      $name = "";
-      $email = "";
-      $phone = "";
-      $address = "";
-
-      $successMessage = "Application submitted successfully!";
-
-      header("location:scholarship.html");
-      exit;
-
-
-
-    } while (false);
+// Helper function to upload file and return path or null
+function uploadFile($inputName, $uploadDir) {
+  if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] == 0) {
+    $filename = basename($_FILES[$inputName]['name']);
+    $targetPath = $uploadDir . time() . "_" . uniqid() . "_" . $filename;
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0777, true);
+    }
+    if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetPath)) {
+      return $targetPath;
+    }
   }
+  return null;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"] ?? "";
+  $email = $_POST["email"] ?? "";
+  $phone = $_POST["phone"] ?? "";
+  $address = $_POST["address"] ?? "";
+
+  // File uploads
+  $applicationFormPath = uploadFile('application_form', $uploadDir);
+  $letterPath = uploadFile('letter', $uploadDir);
+  $form9Path = uploadFile('form9', $uploadDir);
+  $rankingCertPath = uploadFile('ranking_cert', $uploadDir);
+  $goodMoralPath = uploadFile('good_moral', $uploadDir);
+  $passportPicPath = uploadFile('passport_pic', $uploadDir);
+
+  do {
+    if (empty($name) || empty($email) || empty($phone) || empty($address)) {
+      $errorMessage = "All fields are required.";
+      break;
+    }
+
+    // You may want to check if files are uploaded as required
+    // Example: if (empty($applicationFormPath) || empty($letterPath)) { ... }
+
+    $sql = "INSERT INTO gregdom
+      (name, email, phone, address, application_form, letter, form9, ranking_cert, good_moral, passport_pic) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+      $errorMessage = "Error: " . $conn->error;
+      break;
+    }
+    $stmt->bind_param(
+      "ssssssssss",
+      $name,
+      $email,
+      $phone,
+      $address,
+      $applicationFormPath,
+      $letterPath,
+      $form9Path,
+      $rankingCertPath,
+      $goodMoralPath,
+      $passportPicPath
+    );
+
+    if (!$stmt->execute()) {
+      $errorMessage = "Error: " . $stmt->error;
+      break;
+    }
+
+    $name = "";
+    $email = "";
+    $phone = "";
+    $address = "";
+
+    $successMessage = "Application submitted successfully!";
+
+    header("Location: scholarship.html");
+    exit; 
+  } while (false);
+}
 ?>
 
 
@@ -237,7 +278,7 @@ if  ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="col-md-6 border-end">
           <h5 class="fw-bold mb-3 text-danger">Personal Information</h5>
           <div class="mb-3">
-            <label class="form-label fw-semibold" for="name1">Name</label>
+            <label class="form-label fw-semibold" for="name1">Full Name</label>
             <input type="text" class="form-control" name="name" placeholder="Enter name" value="<?php echo $name; ?>">
           </div>
           <div class="mb-3">
@@ -258,27 +299,27 @@ if  ($_SERVER["REQUEST_METHOD"] == "POST") {
           <h5 class="fw-bold mb-3 text-danger">Upload Requirements</h5>
           <div class="mb-3">
             <label class="form-label" for="application_form">Scholarship Application Form (PDF)</label>
-            <input type="file" class="form-control" id="application_form" name="application_form" accept=".pdf" >
+            <input type="file" class="form-control" id="application_form" name="application_form" accept=".pdf" required>
           </div>
           <div class="mb-3">
             <label class="form-label" for="letter">Letter to Dr. Gregorio A. Andaman, Jr., MHA (PDF)</label>
-            <input type="file" class="form-control" id="letter" name="letter" accept=".pdf">
+            <input type="file" class="form-control" id="letter" name="letter" accept=".pdf" required>
           </div>
           <div class="mb-3">
             <label class="form-label" for="form9">Photocopy of Form 9 (PDF/JPG/PNG)</label>
-            <input type="file" class="form-control" id="form9" name="form9" accept=".pdf,.jpg,.jpeg,.png">
+            <input type="file" class="form-control" id="form9" name="form9" accept=".pdf,.jpg,.jpeg,.png" required>
           </div>
           <div class="mb-3">
             <label class="form-label" for="ranking_cert">Certification of Ranking (PDF/JPG/PNG)</label>
-            <input type="file" class="form-control" id="ranking_cert" name="ranking_cert" accept=".pdf,.jpg,.jpeg,.png">
+            <input type="file" class="form-control" id="ranking_cert" name="ranking_cert" accept=".pdf,.jpg,.jpeg,.png" required>
           </div>
           <div class="mb-3">
             <label class="form-label" for="good_moral">Certificate of Good Moral Character (PDF/JPG/PNG)</label>
-            <input type="file" class="form-control" id="good_moral" name="good_moral" accept=".pdf,.jpg,.jpeg,.png">
+            <input type="file" class="form-control" id="good_moral" name="good_moral" accept=".pdf,.jpg,.jpeg,.png" required>
           </div>
           <div class="mb-3">
             <label class="form-label" for="passport_pic">Latest Passport Size Picture (JPG/PNG)</label>
-            <input type="file" class="form-control" id="passport_pic" name="passport_pic" accept=".jpg,.jpeg,.png">
+            <input type="file" class="form-control" id="passport_pic" name="passport_pic" accept=".jpg,.jpeg,.png" required>
           </div>
         </div>
       </div>

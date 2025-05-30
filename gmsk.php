@@ -3,55 +3,95 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "students";
+
 $conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
 
+$uploadDir = "uploads/";
 
+function uploadFile($inputName, $uploadDir) {
+  if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] == 0) {
+    $filename = basename($_FILES[$inputName]['name']);
+    $targetPath = $uploadDir . time() . "_" . uniqid() . "_" . $filename;
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0777, true);
+    }
+    if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetPath)) {
+      return $targetPath;
+    }
+  }
+  return null;
+}
 
+// Initialize variables to avoid undefined variable warnings
 $name = "";
 $email = "";
 $phone = "";
 $address = "";
 
-$errorMessage= "";
-$successMessage = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"] ?? "";
+  $email = $_POST["email"] ?? "";
+  $phone = $_POST["phone"] ?? "";
+  $address = $_POST["address"] ?? "";
+
+  $applicationFormPath    = uploadFile('application_form', $uploadDir);
+  $letterToDrAndamanPath  = uploadFile('letter_addressed', $uploadDir);
+  $form9Path              = uploadFile('form9', $uploadDir);
+  $rankingCertPath        = uploadFile('ranking_cert', $uploadDir);
+  $passportPicPath        = uploadFile('passport_pic', $uploadDir);
+  $goodMoralCertPath      = uploadFile('good_moral_cert', $uploadDir);
+
+  $status = "Pending";
+
+  do {
+    if (empty($name) || empty($email) || empty($phone) || empty($address)) {
+      echo "All personal fields are required.";
+      break;
+    }
+
+    // Changed 'letter_addressed' to the actual column name in your database, e.g., 'letter_to_dr_andaman'
+    $sql = "INSERT INTO guro_mo 
+      (name, email, phone, address, application_form, letter_to_dr_andaman, form9, ranking_cert, passport_pic, good_moral_cert, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+      echo "Prepare failed: " . $conn->error;
+      break;
+    }
+
+    $stmt->bind_param(
+      "sssssssssss",
+      $name,
+      $email,
+      $phone,
+      $address,
+      $applicationFormPath,
+      $letterToDrAndamanPath,
+      $form9Path,
+      $rankingCertPath,
+      $passportPicPath,
+      $goodMoralCertPath,
+      $status
+    );
+
+    if (!$stmt->execute()) {
+      echo "Execute failed: " . $stmt->error;
+      break;
+    }
 
 
-if  ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $address = $_POST["address"];
+    $successMessage = "Scholarship application submitted successfully!";
+    header("Location: scholarship.html");
+    exit;
 
-    do {
-      if (empty($name) || empty($email) || empty($phone) || empty($address)) {
-        $errorMessage = "All fields are required.";
-        break;
-      }
-
-        $sql = "INSERT INTO students (name, email, phone, address) 
-        VALUES ('$name', '$email', '$phone', '$address')";
-        $result = $conn->query($sql);
-        if (!$result) {
-          $errorMessage = "Error: " . $conn->error;
-          break;
-        }
-
-
-      $name = "";
-      $email = "";
-      $phone = "";
-      $address = "";
-
-      $successMessage = "Application submitted successfully!";
-
-      header("location:scholarship.html");
-      exit;
-
-
-
-    } while (false);
-  }
+  } while (false);
+}
 ?>
+
 
 
 <!DOCTYPE html>
@@ -269,8 +309,8 @@ if  ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="file" class="form-control" id="form9" name="form9" accept=".pdf,.jpg,.jpeg,.png">
       </div>
       <div class="mb-3">
-        <label class="form-label" for="cert_ranking">Certification of Ranking</label>
-        <input type="file" class="form-control" id="cert_ranking" name="cert_ranking" accept=".pdf,.jpg,.jpeg,.png">
+        <label class="form-label" for="ranking_cert">Certification of Ranking</label>
+        <input type="file" class="form-control" id="ranking_cert" name="ranking_cert" accept=".pdf,.jpg,.jpeg,.png">
       </div>
       <div class="mb-3">
         <label class="form-label" for="passport_pic">Latest passport size picture</label>

@@ -238,7 +238,7 @@
 
         // Only show accepted scholars
         // Update the query to use an existing column, e.g., 'status' or remove the condition if not available
-        $sql = "SELECT * FROM students ORDER BY created_at DESC";
+        $sql = "SELECT * FROM Gregdom ORDER BY created_at ASC";
         $result = $conn->query($sql);
 
         if (!$result) {
@@ -266,6 +266,26 @@
     </div>
   </div>
 </main>
+<?php
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+
+    // Database connection
+    require 'student'; // or wherever your DB connection is
+
+    // Move the record to approved table or mark as approved
+    $sql = "UPDATE your_table SET status='approved' WHERE id=$id";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Success";
+    } else {
+        http_response_code(500);
+        echo "Database update failed.";
+    }
+
+    $conn->close();
+}
+?>
 
 <!-- Footer -->
 <footer class="footer mt-auto">
